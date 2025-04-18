@@ -1,0 +1,55 @@
+# Xcode
+.DS_Store
+/UserInterfaceState.xcuserstate
+xcuserdata/
+*.xcuserstate
+*.xcuserdatad
+*.xcodeproj/project.xcworkspace
+*.xcodeproj/xcshareddata/
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+*.xcworkspace/xcshareddata/
+
+# Swift Package Manager
+.build/
+Packages/
+*.lock
+Package.resolved
+
+# Build Artifacts
+DerivedData/
+*.ipa
+*.app
+*.xcarchive
+*.dSYM
+*.dSYM.zip
+
+# Code Signing
+*.cer
+*.p12
+*.mobileprovision
+*.pem
+
+# Miscellaneous
+.swp
+*~
+*.swp
+*.swo
+*.log
+*.bak
+*.backup
+Pods/
+Carthage/
+.idea/
+.vscode/
+.swiftpm/
+Pods/
+Documentation/
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+
+# Environment
+.env
+*.xcconfig
