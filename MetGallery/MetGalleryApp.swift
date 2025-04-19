@@ -12,6 +12,7 @@ struct MetGalleryApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .modelContainer(for: Artpiece.self)
         }
     }
 }
