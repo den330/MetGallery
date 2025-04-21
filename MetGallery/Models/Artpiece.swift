@@ -9,15 +9,17 @@ final class Artpiece: Identifiable {
     var artist: String
     var title: String
     var year: String
-    @Transient var cachedThumbnail: Data?
+    var cachedThumbnail: Data?
+    var department: String
     
-    init(id: Int, imageUrl: URL?, imageUrlSmall: URL?, artist: String, title: String, year: String) {
+    init(id: Int, imageUrl: URL?, imageUrlSmall: URL?, artist: String, title: String, year: String, department: String) {
         self.id = id
         self.imageUrl = imageUrl
         self.imageUrlSmall = imageUrlSmall
         self.artist = artist
         self.title = title
         self.year = year
+        self.department = department
     }
 }
 
@@ -29,7 +31,8 @@ extension Artpiece {
             imageUrlSmall: URL(string: dto.primaryImageSmall),
             artist: dto.artistDisplayName == "" ? "Unknown" : dto.artistDisplayName,
             title: dto.title,
-            year: dto.objectDate == "" ? "Unknown" : dto.objectDate
+            year: dto.objectDate == "" ? "Unknown" : dto.objectDate,
+            department: dto.department
         )
     }
 }
@@ -41,6 +44,8 @@ struct ArtpieceDTO: Decodable {
     var artistDisplayName: String
     var primaryImage: String
     var primaryImageSmall: String
+    var isFav: Bool? = false
+    var department: String
 }
 
 struct IDList: Decodable {

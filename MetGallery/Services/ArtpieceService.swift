@@ -7,11 +7,14 @@
 
 import Foundation
 import SwiftData
+import UIKit
 
 @MainActor
 protocol ArtpieceServiceProtocol: AnyObject {
     func fetchArtpieceInTheNextBatch() async throws -> [ArtpieceDTO]
     func generateObjectIDListAndFetchFirstPage(with keyword: String) async throws -> [ArtpieceDTO]
+    func fetchHighResImage(for id: Int, urlStr: String) async throws -> UIImage?
+    func fetchLowResImageData(for id: Int, urlStr: String) async throws -> Data?
 }
 
 @MainActor
@@ -19,6 +22,7 @@ class ArtpieceService: ArtpieceServiceProtocol {
     enum ArtpieceServiceError: Error {
         case artpieceFetchError
         case smallImageFetchError
+        case invalidUrl
     }
     private let context: ModelContext
     private var page = 1
@@ -43,6 +47,7 @@ class ArtpieceService: ArtpieceServiceProtocol {
             print("response is \(response)")
             throw ArtpieceServiceError.artpieceFetchError
         }
+        print("response is \(response)")
         let decoder = JSONDecoder()
         let idListObject = try decoder.decode(IDList.self, from: data)
         let favIds = try context.fetch(FetchDescriptor<Artpiece>()).map { $0.id }
@@ -91,9 +96,40 @@ class ArtpieceService: ArtpieceServiceProtocol {
         if startIndex >= objectIDList.count {
             return []
         }
-        var endIndex = Int(min(objectIDList.count, startIndex + batchSize))
+        let endIndex = Int(min(objectIDList.count, startIndex + batchSize))
         let artList = try await fetchAll(ids: Array(objectIDList[startIndex..<endIndex]))
         page += 1
         return artList
     }
+    
+    func fetchHighResImage(for id: Int, urlStr: String) async throws -> UIImage? {
+        if let image = CacheManager.shared.image(for: id) {
+            return image
+        }
+        print("high res url is \(urlStr)")
+        guard let url = URL(string: urlStr) else {
+            throw ArtpieceServiceError.invalidUrl
+        }
+        let urlRequest = URLRequest(url: url)
+        let (data, _) = try await URLSession.shared.data(for: urlRequest)
+        if let image = UIImage(data: data) {
+            CacheManager.shared.insertImage(image, id: id)
+            return image
+        }
+        return nil
+    }
+    
+    func fetchLowResImageData(for id: Int, urlStr: String) async throws -> Data? {
+        guard let url = URL(string: urlStr) else {
+            throw ArtpieceServiceError.invalidUrl
+        }
+        let urlRequest = URLRequest(url: url)
+        let (data, response) = try await URLSession.shared.data(for: urlRequest)
+        guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+            throw ArtpieceServiceError.artpieceFetchError
+        }
+        print("response for low res is \(response)")
+        return data
+    }
+
 }

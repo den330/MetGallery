@@ -6,6 +6,7 @@
 //
 import SwiftData
 import Foundation
+import UIKit
 
 @MainActor
 class GalleryViewModel: ObservableObject {
@@ -27,7 +28,8 @@ class GalleryViewModel: ObservableObject {
     func generateInitialBatch(with keyword: String) async {
         searchStatus = .searching
         do {
-            artpieceDTOList = try await apService.generateObjectIDListAndFetchFirstPage(with: keyword)
+            artpieceDTOList = try await apService.generateObjectIDListAndFetchFirstPage(with: keyword).filter {!$0.primaryImageSmall.isEmpty}
+            print("dto list is \(artpieceDTOList.count)")
             searchStatus = artpieceDTOList.isEmpty ? .searchFoundNothing : .searchFoundResult
         } catch {
             print("error is \(error.localizedDescription)")
@@ -36,10 +38,14 @@ class GalleryViewModel: ObservableObject {
         }
     }
     
+    func getImageFromCache(for id: Int) -> UIImage? {
+        return CacheManager.shared.image(for: id)
+    }
+    
     func fetchNextBatch() async {
         searchStatus = .searching
         do {
-            let newItems = try await apService.fetchArtpieceInTheNextBatch()
+            let newItems = try await apService.fetchArtpieceInTheNextBatch().filter {!$0.primaryImageSmall.isEmpty}
             artpieceDTOList.append(contentsOf: newItems)
             searchStatus = artpieceDTOList.isEmpty ? .searchFoundNothing : .searchFoundResult
         } catch {
