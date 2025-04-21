@@ -29,7 +29,6 @@ class GalleryViewModel: ObservableObject {
         searchStatus = .searching
         do {
             artpieceDTOList = try await apService.generateObjectIDListAndFetchFirstPage(with: keyword).filter {!$0.primaryImageSmall.isEmpty}
-            print("dto list is \(artpieceDTOList.count)")
             searchStatus = artpieceDTOList.isEmpty ? .searchFoundNothing : .searchFoundResult
         } catch {
             print("error is \(error.localizedDescription)")

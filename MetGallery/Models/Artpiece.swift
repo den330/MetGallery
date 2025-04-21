@@ -37,7 +37,7 @@ extension Artpiece {
     }
 }
 
-struct ArtpieceDTO: Decodable {
+struct ArtpieceDTO: Decodable, Equatable {
     var objectID: Int
     var objectDate: String
     var title: String
@@ -46,6 +46,9 @@ struct ArtpieceDTO: Decodable {
     var primaryImageSmall: String
     var isFav: Bool? = false
     var department: String
+    static func == (lhs: ArtpieceDTO, rhs: ArtpieceDTO) -> Bool {
+        lhs.objectID == rhs.objectID
+    }
 }
 
 struct IDList: Decodable {
