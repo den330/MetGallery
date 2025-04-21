@@ -9,10 +9,22 @@ import SwiftUI
 
 @main
 struct MetGalleryApp: App {
+    @State private var isLoading = true
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .modelContainer(for: Artpiece.self)
+            Group {
+                if isLoading {
+                    SplashView()
+                } else {
+                    ContentView()
+                        .modelContainer(for: Artpiece.self)
+                }
+            }
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    isLoading = false
+                }
+            }
         }
     }
 }
