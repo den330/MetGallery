@@ -108,14 +108,14 @@ struct GalleryViewModelTests {
     
     @Test
     func generateInitialBatch_showsSearching_thenFinalStatus() async throws {
-        let (vm, mock) = makeSUT()
-        mock.dtosToBeReturned = [Self.dtoWithImage]
-        mock.delay = 200_000_000
-        let task = Task { await vm.generateInitialBatch(with: "landscape") }
-        await Task.yield()
-        #expect(vm.searchStatus == .searching)
-        await task.value
-        #expect(vm.searchStatus == .searchFoundResult)
+            let (vm, mock) = makeSUT()
+            mock.dtosToBeReturned = [Self.dtoWithImage]
+            mock.delay = 200_000_000
+            let task = Task { await vm.generateInitialBatch(with: "landscape") }
+            await Task.yield()
+            #expect(vm.searchStatus == .searching)
+            await task.value
+            #expect(vm.searchStatus == .searchFoundResult)
     }
 }
 

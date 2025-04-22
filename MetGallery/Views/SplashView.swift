@@ -22,6 +22,11 @@ struct SplashView: View {
                     withAnimation(.easeIn(duration: 1)) {
                         fadesIn = true
                     }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        withAnimation(.easeOut(duration: 1)) {
+                            fadesIn = false
+                        }
+                    }
                 }
         }
     }

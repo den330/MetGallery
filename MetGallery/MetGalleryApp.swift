@@ -21,7 +21,7 @@ struct MetGalleryApp: App {
                 }
             }
             .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3.5) {
                     isLoading = false
                 }
             }
