@@ -54,7 +54,3 @@ struct ChartView: View {
         }
     }
 }
-
-#Preview {
-    ChartView()
-}

@@ -28,7 +28,3 @@ struct APTabView: View {
         }
     }
 }
-
-//#Preview {
-//    APTabView()
-//}

@@ -50,16 +50,14 @@ struct ImagePageView: View {
                 Spacer(minLength: 50)
             }
             if showHint {
-                ImageDetailHintOverlay {
-                    showHint = false
-                    hasSeenImageDetailHint = true
-                }
+                    ImageDetailHintOverlay {
+                        showHint = false
+                        hasSeenImageDetailHint = true
+                    }
+                    .transition(.opacity)
             }
         }
+        .animation(.easeInOut(duration: 1), value: showHint)
         .ignoresSafeArea()
     }
 }
-
-//#Preview {
-//    ImagePageView()
-//}

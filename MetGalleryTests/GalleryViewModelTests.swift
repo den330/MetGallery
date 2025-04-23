@@ -19,7 +19,7 @@ struct GalleryViewModelTests {
         title: "NoImage",
         artistDisplayName: "Artist",
         primaryImage: "high2.jpg",
-        primaryImageSmall: "",    // will be filtered out
+        primaryImageSmall: "",
         department: "Test"
     )
     
