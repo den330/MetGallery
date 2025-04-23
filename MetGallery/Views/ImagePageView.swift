@@ -42,8 +42,8 @@ struct ImagePageView: View {
                     PageTabViewStyle(indexDisplayMode: .automatic)
                 )
                 .onAppear {
-                    if !hasSeenImageDetailHint {
-                        showHint = true
+                    withAnimation(.easeInOut(duration: 1)) {
+                        showHint = !hasSeenImageDetailHint
                     }
                 }
                 .disabled(showHint)
@@ -57,7 +57,6 @@ struct ImagePageView: View {
                     .transition(.opacity)
             }
         }
-        .animation(.easeInOut(duration: 1), value: showHint)
         .ignoresSafeArea()
     }
 }
