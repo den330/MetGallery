@@ -42,21 +42,21 @@ struct ImagePageView: View {
                     PageTabViewStyle(indexDisplayMode: .automatic)
                 )
                 .onAppear {
-                    withAnimation(.easeInOut(duration: 1)) {
-                        showHint = !hasSeenImageDetailHint
-                    }
+                    showHint = !hasSeenImageDetailHint
                 }
                 .disabled(showHint)
                 Spacer(minLength: 50)
             }
+            .zIndex(0)
             if showHint {
-                    ImageDetailHintOverlay {
-                        showHint = false
-                        hasSeenImageDetailHint = true
-                    }
-                    .transition(.opacity)
+                ImageDetailHintOverlay(showHint: $showHint) {
+                    hasSeenImageDetailHint = true
+                }
+                .transition(.opacity)
+                .zIndex(1)
             }
         }
+        .animation(.easeInOut(duration: 1), value: showHint)
         .ignoresSafeArea()
     }
 }

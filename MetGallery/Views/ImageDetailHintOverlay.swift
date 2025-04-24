@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ImageDetailHintOverlay: View {
+    @Binding var showHint: Bool
     var dismiss: () -> Void
     var body: some View {
         let isPad = UIDevice.current.userInterfaceIdiom == .pad
@@ -22,7 +23,10 @@ struct ImageDetailHintOverlay: View {
                 Text("Swipe left or right to see the next or previous image")
                     .font(isPad ? .largeTitle : .title2)
                     .padding()
-                Button(action: dismiss, label: {
+                Button(action: {
+                    dismiss()
+                    showHint = false
+                }, label: {
                     Image(systemName: "xmark")
                         .resizable()
                         .scaledToFit()

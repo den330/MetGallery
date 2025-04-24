@@ -91,7 +91,3 @@ struct ImageDetailView: View {
         }
     }
 }
-
-//#Preview {
-//    ImageDetailView()
-//}

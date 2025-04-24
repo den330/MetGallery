@@ -13,7 +13,13 @@ struct SplashView: View {
         ZStack {
             Color(.black)
                 .ignoresSafeArea()
-            Image("iconImage")
+                
+            Image("MetBuilding")
+                .resizable()
+                .scaledToFill()
+                .ignoresSafeArea()
+                
+            Image("flashIcon")
                 .resizable()
                 .scaledToFit()
                 .frame(width: 150, height: 150)

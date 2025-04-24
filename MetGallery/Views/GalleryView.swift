@@ -25,7 +25,8 @@ struct GalleryView: View {
             let columnCount = (isPad && isLandscape) ? 4 : 3
             let columns = Array(repeating: GridItem(.flexible()), count: columnCount)
             VStack(alignment: .center) {
-                TextField("I am feeling ...", text: $inputText)
+                TextField("", text: $inputText, prompt: Text("I am feeling...")
+                    .foregroundColor(.gray) )
                     .foregroundColor(.blue)
                     .font(.system(size: 16, weight: .bold))
                     .padding()
@@ -127,6 +128,8 @@ struct GalleryView: View {
                 }
             }
             .padding()
+            .background(Color.black)
+            .foregroundStyle(.white)
         }
     }
 }
