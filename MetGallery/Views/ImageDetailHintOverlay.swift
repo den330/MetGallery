@@ -27,10 +27,15 @@ struct ImageDetailHintOverlay: View {
                     dismiss()
                     showHint = false
                 }, label: {
-                    Image(systemName: "xmark")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 30, height: 30)
+                    Text("Got it.")
+                        .bold()
+                        .padding(.horizontal, 15)
+                        .padding(.vertical, 8)
+                        .background(.blue)
+                        .clipShape(Capsule())
+                        .overlay {
+                            Capsule().stroke(.white, lineWidth: 3)
+                        }
                 })
                 .padding()
             }
