@@ -105,7 +105,9 @@ struct FavListView: View {
                     .navigationTitle("Favorite List")
                     .navigationBarTitleDisplayMode(.inline)
                     .navigationDestination(for: Artpiece.self) { ap in
-                        FavDetailView(ap: ap, apService: ArtpieceService(context: context))
+                        if let index = aps.sorted(by: { $0.department < $1.department }).firstIndex(of: ap) {
+                            FavPageView(ap: ap, currentIndex: index)
+                        }
                     }
                     .searchable(text: $searchText, placement: .navigationBarDrawer)
                     .toolbar {
