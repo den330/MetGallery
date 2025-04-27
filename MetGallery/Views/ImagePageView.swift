@@ -14,6 +14,7 @@ struct ImagePageView: View {
     var DTOList: [ArtpieceDTO]
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
+    @State private var showShareSheet: Bool = false
 
     var body: some View {
         ZStack {
@@ -28,15 +29,14 @@ struct ImagePageView: View {
                             .resizable()
                             .scaledToFit()
                             .frame(width: 20, height: 20)
+                            .padding()
                     }
-                    .padding(10)
                 }
                 .padding(.trailing, 10)
                 TabView(selection: $currentIndex) {
                     ForEach(Array(DTOList.enumerated()), id: \.1.objectID) { index, dto in
-                        ImageDetailView(DTO: dto, apService: ArtpieceService(context: context))
+                        ImageDetailView(DTO: dto, apService: ArtpieceService(context: context), openShareSheet: $showShareSheet)
                             .tag(index)
-                            .padding(.top, 30)
                     }
                 }.tabViewStyle(
                     PageTabViewStyle(indexDisplayMode: .automatic)
@@ -45,7 +45,7 @@ struct ImagePageView: View {
                     showHint = !hasSeenImageDetailHint
                 }
                 .disabled(showHint)
-                Spacer(minLength: 50)
+                Spacer()
             }
             .zIndex(0)
             if showHint {
@@ -57,6 +57,11 @@ struct ImagePageView: View {
             }
         }
         .animation(.easeInOut(duration: 1), value: showHint)
+        .sheet(isPresented: $showShareSheet) {
+            if let currentIndex = currentIndex, let image = CacheManager.shared.image(for: DTOList[currentIndex].objectID){
+                ShareSheet(items: [image])
+            }
+        }
         .ignoresSafeArea()
     }
 }

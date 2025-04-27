@@ -17,27 +17,14 @@ struct ImageDetailView: View {
     @Query private var aps: [Artpiece]
     @State private var fetchTask: Task<Void, Never>?
     @State var highResImage: UIImage?
-    @State var isFav = false
+    @State var isFav: Bool? = false
+    @Binding var openShareSheet: Bool
     @Environment(\.modelContext) private var context
     
     var body: some View {
         Group {
             if let image = highResImage {
-                ZStack(alignment: .topTrailing) {
-                    Image(uiImage: image)
-                        .resizable()
-                        .scaledToFit()
-                        .padding()
-                    Image(systemName: isFav ? "heart.fill" : "heart")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 32, height: 32)
-                        .padding(25)
-                        .foregroundStyle(.red)
-                        .onTapGesture {
-                            isFav.toggle()
-                        }
-                }
+                ZoomableImageView(image: Image(uiImage: image), isFav: $isFav, openShare: $openShareSheet)
             } else {
                 Image(systemName: "photo")
                     .resizable()
@@ -61,7 +48,7 @@ struct ImageDetailView: View {
         }
         .onChange(of: isFav) {
             do {
-                if isFav {
+                if isFav ?? false {
                     let ap = Artpiece.fromDTO(DTO)
                     Task {
                         do {
@@ -88,6 +75,7 @@ struct ImageDetailView: View {
         }
         .onDisappear {
             fetchTask?.cancel()
+            openShareSheet = false
         }
     }
 }

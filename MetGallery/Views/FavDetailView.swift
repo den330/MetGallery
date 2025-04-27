@@ -1,10 +1,3 @@
-//
-//  FavDetailView.swift
-//  MetGallery
-//
-//  Created by yaxin on 2025-04-19.
-//
-
 import SwiftUI
 import UIKit
 
@@ -12,15 +5,13 @@ struct FavDetailView: View {
     var ap: Artpiece
     var apService: ArtpieceService
     @State private var fetchTask: Task<Void, Never>?
-    @State var showInstructionLayer: Bool = false
     @State private var fetchedHighResImage: UIImage?
+    @Binding var openShareSheet: Bool
     var body: some View {
         Group {
-            ZStack(alignment: .bottom) {
+            ZStack(alignment: .bottomLeading) {
                 if let highResImage = fetchedHighResImage {
-                    Image(uiImage: highResImage)
-                        .resizable()
-                        .scaledToFit()
+                    ZoomableImageView(image: Image(uiImage: highResImage), openShare: $openShareSheet)
                 } else {
                     if let data = ap.cachedThumbnail, let uiImage = UIImage(data: data) {
                         Image(uiImage: uiImage)
@@ -33,9 +24,7 @@ struct FavDetailView: View {
                             .foregroundStyle(.secondary)
                     }
                 }
-                if showInstructionLayer {
-                    Text("Department: \(ap.department)").frame(maxWidth: .infinity).background(.black).foregroundStyle(.white)
-                }
+
             }
         }
         .padding(30)
@@ -56,12 +45,9 @@ struct FavDetailView: View {
                 }
             }
         }
-        .onTapGesture {
-            showInstructionLayer.toggle()
+        .onDisappear {
+            fetchTask?.cancel()
+            openShareSheet = false
         }
     }
 }
-
-//#Preview {
-//    FavDetailView()
-//}

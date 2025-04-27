@@ -23,6 +23,10 @@ struct FavListView: View {
         let values: [Artpiece]
     }
     
+    private var depList: [String] {
+        Array(Set(aps.map {$0.department}))
+    }
+    
     private var sectionList: [SectionData] {
         var dict = [String:[Artpiece]]()
         var sectionList = [SectionData]()
@@ -128,9 +132,11 @@ struct FavListView: View {
                             Button {
                                 filterClicked.toggle()
                             } label: {
-                                FilterMenuView(departments: Array(Set(aps.map {$0.department})), selectedDepartment: $currentlySelectedDepartment)
+                                FilterMenuView(departments: depList, selectedDepartment: $currentlySelectedDepartment)
                                     .foregroundStyle(.white)
+                                    .opacity(depList.count >= 2 ? 1.0 : 0.5)
                             }
+                            .disabled(depList.count < 2)
                         }
                     }
                 }
