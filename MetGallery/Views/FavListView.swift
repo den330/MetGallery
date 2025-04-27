@@ -14,6 +14,8 @@ struct FavListView: View {
     @Query private var aps: [Artpiece]
     @State private var showChartView: Bool = false
     @State private var searchText: String = ""
+    @State private var filterClicked: Bool = false
+    @State private var currentlySelectedDepartment: String?
     
     struct SectionData: Identifiable {
         let id = UUID()
@@ -25,6 +27,9 @@ struct FavListView: View {
         var dict = [String:[Artpiece]]()
         var sectionList = [SectionData]()
         for ap in aps {
+            if let currentlySelectedDepartment = currentlySelectedDepartment, ap.department != currentlySelectedDepartment {
+                continue
+            }
             if ap.title.contains(searchText) || searchText.isEmpty {
                 dict[ap.department, default:[]].append(ap)
             }
@@ -111,11 +116,20 @@ struct FavListView: View {
                     }
                     .searchable(text: $searchText, placement: .navigationBarDrawer)
                     .toolbar {
-                        ToolbarItem(placement: .navigationBarTrailing) {
+                        ToolbarItem(placement: .topBarLeading) {
+                                Button {
+                                    showChartView.toggle()
+                                } label: {
+                                    Image(systemName: "chart.pie")
+                                        .foregroundStyle(.white)
+                                }
+                        }
+                        ToolbarItem(placement: .topBarTrailing) {
                             Button {
-                                showChartView.toggle()
+                                filterClicked.toggle()
                             } label: {
-                                Image(systemName: "chart.pie")
+                                FilterMenuView(departments: Array(Set(aps.map {$0.department})), selectedDepartment: $currentlySelectedDepartment)
+                                    .foregroundStyle(.white)
                             }
                         }
                     }
@@ -126,6 +140,39 @@ struct FavListView: View {
             ChartView()
                 .presentationDetents([.fraction(0.5)])
                 .presentationDragIndicator(.visible)
+        }
+    }
+}
+
+struct FilterMenuView: View {
+    var departments: [String]
+    @Binding var selectedDepartment: String?
+    var body: some View {
+        Menu {
+            ForEach(departments.sorted {$0 < $1}, id: \.self) { department in
+                Button {
+                    selectedDepartment = selectedDepartment == department ? nil : department
+                } label: {
+                    FilterPopOverItemView(text: department, currentlySelectedDepartment: $selectedDepartment)
+                }
+            }
+        } label: {
+            Image(systemName: "line.3.horizontal.decrease.circle")
+        }
+    }
+}
+
+
+
+struct FilterPopOverItemView: View {
+    var text: String
+    @Binding var currentlySelectedDepartment: String?
+    var body: some View {
+        HStack(alignment: .center) {
+            Text(text)
+            if let currentlySelectedDepartment = currentlySelectedDepartment, currentlySelectedDepartment == text {
+                Image(systemName: "checkmark")
+            }
         }
     }
 }
