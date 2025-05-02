@@ -39,12 +39,12 @@ struct ChartView: View {
             .foregroundStyle(by: .value("Department", entry.0))
             .annotation(position: .overlay) {
                 if entry.1 > 0 {
-                    Text("\(entry.1) times")
+                    Text("\(entry.1)")
                         .font(.caption2.bold())
                 }
             }
         }
-        .chartLegend(position: .trailing)
+        .chartLegend(position: .bottom, spacing: 20)
         .frame(height: 300)
         .padding()
         .onAppear {

@@ -9,3 +9,12 @@ France
 Italy
 Art
 Rain
+Cat
+Tiger
+Dog
+Mountain
+Sun
+Moon
+Star
+Cloud
+Light

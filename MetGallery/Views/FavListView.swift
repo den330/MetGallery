@@ -144,7 +144,7 @@ struct FavListView: View {
         }
         .sheet(isPresented: $showChartView) {
             ChartView()
-                .presentationDetents([.fraction(0.5)])
+                .presentationDetents([.height(330)])
                 .presentationDragIndicator(.visible)
         }
     }

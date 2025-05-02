@@ -17,7 +17,16 @@ struct GalleryView: View {
     @State var imageTapped: Int?
     @State var selectedIndex: Int?
     @State var appearedOnce = false
+    @State var dotCount = 0
     @StateObject var viewModel: GalleryViewModel
+    
+    private var promptText: String {
+        let baseText = "I am feeling"
+        let dots = String(repeating: ".", count: dotCount)
+        return baseText.appending(dots)
+    }
+    
+    private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
     var body: some View {
         GeometryReader { geometry in
@@ -26,7 +35,7 @@ struct GalleryView: View {
             let columnCount = (isPad && isLandscape) ? 4 : 3
             let columns = Array(repeating: GridItem(.flexible()), count: columnCount)
             VStack(alignment: .center) {
-                TextField("", text: $inputText, prompt: Text("I am feeling...")
+                TextField("", text: $inputText, prompt: Text(promptText)
                     .foregroundColor(.gray) )
                     .foregroundColor(.blue)
                     .font(.system(size: 16, weight: .bold))
@@ -126,6 +135,9 @@ struct GalleryView: View {
                         keyword = RandomWordGenerator.generateRandomWord()
                         appearedOnce = true
                     }
+                }
+                .onReceive(timer) { _ in
+                    dotCount = (dotCount + 1) % 4
                 }
                 .fullScreenCover(isPresented: Binding(
                     get: {selectedIndex != nil},
