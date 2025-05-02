@@ -16,6 +16,7 @@ struct GalleryView: View {
     @State var inputText: String = ""
     @State var imageTapped: Int?
     @State var selectedIndex: Int?
+    @State var appearedOnce = false
     @StateObject var viewModel: GalleryViewModel
     
     var body: some View {
@@ -118,6 +119,12 @@ struct GalleryView: View {
                         if let keyword = keyword {
                             await viewModel.generateInitialBatch(with: keyword)
                         }
+                    }
+                }
+                .onAppear {
+                    if !appearedOnce {
+                        keyword = RandomWordGenerator.generateRandomWord()
+                        appearedOnce = true
                     }
                 }
                 .fullScreenCover(isPresented: Binding(

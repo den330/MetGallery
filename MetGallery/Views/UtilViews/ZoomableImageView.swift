@@ -78,12 +78,14 @@ struct ZoomableImageView: View {
     private func magnificationGesture(geometry: GeometryProxy) -> some Gesture {
         MagnificationGesture()
             .onChanged { value in
+                print("value is \(value)")
                 let delta = value / lastScale
                 lastScale = value
                 let newScale = scale * delta
                 scale = min(max(newScale, minScale), maxScale)
             }
-            .onEnded { _ in
+            .onEnded { value in
+                print("change ended with \(value)")
                 lastScale = 1.0
                 adjustOffsetForBounds(geometry: geometry)
             }
