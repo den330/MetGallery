@@ -71,14 +71,14 @@ struct FavListView: View {
                                             if let data = ap.cachedThumbnail, let uiImage = UIImage(data: data) {
                                                 Image(uiImage: uiImage)
                                                     .resizable()
-                                                    .frame(width: 100, height: 100)
                                                     .scaledToFit()
+                                                    .frame(width: 100, height: 100)
                                                     .foregroundColor(.secondary)
                                             } else {
                                                 Image(systemName: "photo")
                                                     .resizable()
-                                                    .frame(width: 100, height: 100)
                                                     .scaledToFit()
+                                                    .frame(width: 100, height: 100)
                                                     .foregroundColor(.secondary)
                                             }
                                             VStack(alignment: .leading, spacing: 5) {
