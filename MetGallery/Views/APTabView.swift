@@ -9,9 +9,8 @@ import SwiftUI
 
 struct APTabView: View {
     @Environment(\.modelContext) private var context
-    enum Tab { case gallery, favorites }
+    enum Tab { case gallery, favorites, collection }
     @State private var selectedTab: Tab = .gallery
-
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -25,6 +24,11 @@ struct APTabView: View {
                     Image(systemName: "heart.fill")
                 }
                 .tag(Tab.favorites)
+            APCollectionView()
+                .tabItem {
+                    Image(systemName: "folder.fill")
+                }
+                .tag(Tab.collection)
         }
     }
 }

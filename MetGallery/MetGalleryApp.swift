@@ -17,7 +17,7 @@ struct MetGalleryApp: App {
                     SplashView()
                 } else {
                     ContentView()
-                        .modelContainer(for: Artpiece.self)
+                        .modelContainer(for: [Artpiece.self, APCollection.self])
                 }
             }
             .onAppear {

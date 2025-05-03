@@ -11,6 +11,7 @@ final class Artpiece: Identifiable {
     var year: String
     var cachedThumbnail: Data?
     var department: String
+    var collections: [APCollection] = []
     
     init(id: Int, imageUrl: URL?, imageUrlSmall: URL?, artist: String, title: String, year: String, department: String) {
         self.id = id
