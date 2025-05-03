@@ -25,6 +25,7 @@ struct CollectionPageView: View {
                         .tag(index)
                 }
             }
+            .padding(.vertical, 20)
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -43,7 +44,7 @@ struct CollectionPageView: View {
                                 self.currentIndex = nil
                             }
                             do {
-                                context.delete(ap)
+                                collection.apList.removeAll { $0.id == ap.id }
                                 try context.save()
                             } catch {
                                 print("delete error \(error.localizedDescription)")
@@ -51,6 +52,7 @@ struct CollectionPageView: View {
                         }
                     }, label: {
                         Image(systemName: "trash")
+                            .tint(.red)
                     })
                 }
             }

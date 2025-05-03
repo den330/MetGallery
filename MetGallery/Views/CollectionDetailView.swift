@@ -28,6 +28,8 @@ struct CollectionDetailView: View {
         .onAppear {
             fetchTask?.cancel()
             fetchTask = Task {
+                try? await Task.sleep(nanoseconds: 800_000_000)
+                guard !Task.isCancelled else { return }
                 if let imageUrl = ap.imageUrl {
                     do {
                        highResImage = try await apService.fetchHighResImage(for: ap.id, urlStr: imageUrl.absoluteString)

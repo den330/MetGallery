@@ -147,6 +147,7 @@ struct FavListView: View {
                 .presentationDetents([.height(330)])
                 .presentationDragIndicator(.visible)
         }
+        .tint(.white)
     }
 }
 

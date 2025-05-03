@@ -12,11 +12,13 @@ struct CollectionCreationView: View {
     @Environment(\.modelContext) private var context
     @State private var inputText: String = ""
     @Binding var isPresented: Bool
+    @FocusState private var focused
     var body: some View {
         NavigationStack {
-            VStack {
+            Form {
                 Text("Collection Name:")
                 TextField("", text: $inputText)
+                    .focused($focused)
             }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -39,6 +41,10 @@ struct CollectionCreationView: View {
                     }
                 }
             }
+            .padding()
+        }
+        .onAppear {
+            focused = true
         }
     }
     

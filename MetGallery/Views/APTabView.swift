@@ -30,5 +30,6 @@ struct APTabView: View {
                 }
                 .tag(Tab.collection)
         }
+        .tint(.white)
     }
 }
