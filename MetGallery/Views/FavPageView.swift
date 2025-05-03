@@ -13,6 +13,8 @@ struct FavPageView: View {
     @Query(sort: [SortDescriptor(\Artpiece.department, order: SortOrder.forward)]) private var aps: [Artpiece]
     @State var currentIndex: Int
     @State private var showShare = false
+    @State private var showCollectionMenu = false
+    let isPad = UIDevice.current.userInterfaceIdiom == .pad
     var ap: Artpiece
     
     init(ap: Artpiece, currentIndex: Int) {
@@ -21,21 +23,37 @@ struct FavPageView: View {
     }
     
     var body: some View {
-        TabView(selection: $currentIndex) {
-            ForEach(Array(aps.enumerated()), id: \.1.id) { index, ap in
-                FavDetailView(ap: ap, apService: ArtpieceService(context: context), openShareSheet: $showShare)
-                    .tag(index)
+        VStack {
+            HStack {
+                Spacer()
+                Button(action: {
+                    showCollectionMenu.toggle()
+                }, label: {
+                    Image(systemName: "plus")
+                })
+            }
+            .padding(.bottom, 15)
+            .padding(.trailing, 15)
+            TabView(selection: $currentIndex) {
+                ForEach(Array(aps.enumerated()), id: \.1.id) { index, ap in
+                    FavDetailView(ap: ap, apService: ArtpieceService(context: context), openShareSheet: $showShare)
+                        .tag(index)
+                }
+            }
+            .tabViewStyle(
+                PageTabViewStyle(indexDisplayMode: .automatic)
+            )
+            .sheet(isPresented: $showShare) {
+                if let image = CacheManager.shared.image(for: aps[currentIndex].id) {
+                    ShareSheet(items: [image])
+                } else {
+                    ShareSheet(items: [UIImage(data: aps[currentIndex].cachedThumbnail!)!])
+                }
             }
         }
-        .tabViewStyle(
-            PageTabViewStyle(indexDisplayMode: .automatic)
-        )
-        .sheet(isPresented: $showShare) {
-            if let image = CacheManager.shared.image(for: aps[currentIndex].id) {
-                ShareSheet(items: [image])
-            } else {
-                ShareSheet(items: [UIImage(data: aps[currentIndex].cachedThumbnail!)!])
-            }
+        .sheet(isPresented: $showCollectionMenu) {
+            CollectionMenuView(ap: aps[currentIndex])
+                .presentationDetents([.height(isPad ? 350 : 200)])
         }
     }
 }

@@ -27,24 +27,29 @@ struct APCollectionView: View {
                     })
                     ScrollView {
                         LazyVGrid(columns: columns) {
-                            ForEach(Array(collections.enumerated()), id: \.1.name) { index, collection in
-                                VStack {
-                                    if let firstAp = collection.apList.first, let firstImageData = firstAp.cachedThumbnail, let firstImage = UIImage(data: firstImageData) {
-                                        Image(uiImage: firstImage)
-                                            .resizable()
-                                            .scaledToFit()
-                                    } else {
-                                        Image(systemName: "photo")
-                                            .resizable()
-                                            .scaledToFit()
+                            ForEach(Array(collections.sorted {$0.name < $1.name}.enumerated()), id: \.1.name) { index, collection in
+                                NavigationLink(value: collection) {
+                                    VStack {
+                                        if let firstAp = collection.apList.sorted{ $0.title < $1.title }.first, let firstImageData = firstAp.cachedThumbnail, let firstImage = UIImage(data: firstImageData) {
+                                            Image(uiImage: firstImage)
+                                                .resizable()
+                                                .scaledToFit()
+                                        } else {
+                                            Image(systemName: "photo")
+                                                .resizable()
+                                                .scaledToFit()
+                                        }
+                                        Text("\(collection.name)")
                                     }
-                                    Text("\(collection.name)")
+                                    .padding()
                                 }
-                                .padding()
                             }
                         }
                     }
                 }
+                .navigationDestination(for: APCollection.self, destination: { collection in
+                    CollectionGalleryView(collection: collection)
+                })
             }
             .sheet(isPresented: $presentCreationSheet) {
                 CollectionCreationView(isPresented: $presentCreationSheet)
