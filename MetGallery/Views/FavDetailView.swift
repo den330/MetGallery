@@ -6,10 +6,11 @@ struct FavDetailView: View {
     var apService: ArtpieceService
     @State private var fetchTask: Task<Void, Never>?
     @State private var fetchedHighResImage: UIImage?
+    @State private var presentCollectionMenu = false
     @Binding var openShareSheet: Bool
     var body: some View {
         Group {
-            ZStack(alignment: .bottomLeading) {
+            ZStack(alignment: .topTrailing) {
                 if let highResImage = fetchedHighResImage {
                     ZoomableImageView(image: Image(uiImage: highResImage), openShare: $openShareSheet)
                 } else {
@@ -24,7 +25,11 @@ struct FavDetailView: View {
                             .foregroundStyle(.secondary)
                     }
                 }
-
+                Button(action: {
+                    presentCollectionMenu.toggle()
+                }, label: {
+                    Image(systemName: "plus")
+                })
             }
         }
         .padding(30)
@@ -48,6 +53,10 @@ struct FavDetailView: View {
         .onDisappear {
             fetchTask?.cancel()
             openShareSheet = false
+        }
+        .sheet(isPresented: $presentCollectionMenu) {
+            CollectionMenuView(ap: ap)
+                .presentationDetents([.height(150)])
         }
     }
 }
