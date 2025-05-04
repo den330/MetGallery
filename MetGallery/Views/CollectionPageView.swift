@@ -12,6 +12,7 @@ struct CollectionPageView: View {
     @Environment(\.modelContext) private var context
     @Binding var currentIndex: Int?
     @State private var openShare: Bool = false
+    @State private var showInfo = false
     let collection: APCollection
     var sortedApList: [Artpiece] {
         collection.apList.sorted {$0.title < $1.title}
@@ -19,20 +20,46 @@ struct CollectionPageView: View {
     
     var body: some View {
         NavigationStack {
-            TabView(selection: $currentIndex) {
-                ForEach(Array(sortedApList.enumerated()), id: \.1.id) { index, ap in
-                    CollectionDetailView(ap: ap, apService: ArtpieceService(context: context), openShare: $openShare)
-                        .tag(index)
+            VStack {
+                TabView(selection: $currentIndex) {
+                    ForEach(Array(sortedApList.enumerated()), id: \.1.id) { index, ap in
+                        CollectionDetailView(ap: ap, apService: ArtpieceService(context: context), openShare: $openShare)
+                            .tag(index)
+                    }
+                }
+                .padding(.vertical, 20)
+                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
+                if let currentIndex = currentIndex, showInfo == true {
+                    let ap = sortedApList[currentIndex]
+                    List {
+                        Text("Title: \(ap.title)")
+                        Text("Department: \(ap.department)")
+                        Text("Artist: \(ap.artist)")
+                        Text("Year: \(ap.year)")
+                    }
+                    .lineLimit(2)
+                    .transition(.asymmetric(
+                        insertion: .scale,
+                        removal: .slide
+                    ))
                 }
             }
-            .padding(.vertical, 20)
-            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(action: {
                         currentIndex = nil
                     }, label: {
                         Image(systemName: "xmark")
+                    })
+                }
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(action: {
+                        withAnimation(.easeInOut(duration: 0.5)) {
+                            showInfo.toggle()
+                        }
+                    }, label: {
+                        Image(systemName: "exclamationmark.circle")
                     })
                 }
                 

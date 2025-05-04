@@ -43,7 +43,9 @@ struct CollectionMenuView: View {
                             defer {dismiss()}
                             for collection in collections {
                                 if selectedCollections.contains(collection.name) {
-                                    collection.apList.append(ap)
+                                    if !collection.apList.contains(where: {$0.id == ap.id}){
+                                        collection.apList.append(ap)
+                                    }
                                 } else {
                                     collection.apList = collection.apList.filter {$0.id != ap.id}
                                 }
