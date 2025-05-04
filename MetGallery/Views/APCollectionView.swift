@@ -69,7 +69,9 @@ struct APCollectionView: View {
                             presentCreationSheet.toggle()
                         }, label: {
                             Image(systemName: "plus")
-                                .foregroundStyle(.white)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 20, height: 20)
                         })
                     }
                 }

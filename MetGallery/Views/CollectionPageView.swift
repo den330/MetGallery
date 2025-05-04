@@ -50,6 +50,9 @@ struct CollectionPageView: View {
                         currentIndex = nil
                     }, label: {
                         Image(systemName: "xmark")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 20, height:20)
                     })
                 }
                 

@@ -30,6 +30,9 @@ struct FavPageView: View {
                     showCollectionMenu.toggle()
                 }, label: {
                     Image(systemName: "plus")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 20, height: 20)
                 })
             }
             .padding(.bottom, 15)
