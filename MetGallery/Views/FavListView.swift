@@ -103,13 +103,10 @@ struct FavListView: View {
                                     }
                                 }
                                 .onDelete { offsets in
-                                    withAnimation {
-                                        deleteFav(from: sectionItem, at: offsets)
-                                    }
+                                    deleteFav(from: sectionItem, at: offsets)
                                 }
                             }
                         }
-                        
                     }
                     .navigationTitle("Favorite List")
                     .navigationBarTitleDisplayMode(.inline)
