@@ -111,7 +111,6 @@ struct FavPageView: View {
         .sheet(isPresented: $showCollectionMenu) {
             CollectionMenuView(ap: aps[currentIndex], layerText: $layerText)
                 .presentationDetents([.height(isPad ? 350 : 200)])
-                .interactiveDismissDisabled()
         }
         .sheet(isPresented: $showShare) {
             if let image = CacheManager.shared.image(for: aps[currentIndex].id) {

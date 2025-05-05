@@ -28,7 +28,7 @@ struct CollectionPageView: View {
                     }
                 }
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
-                if let currentIndex = currentIndex, showInfo == true {
+                if let currentIndex = currentIndex, showInfo == true && currentIndex < sortedApList.count {
                     let ap = sortedApList[currentIndex]
                     VStack {
                         HStack(alignment: .center) {

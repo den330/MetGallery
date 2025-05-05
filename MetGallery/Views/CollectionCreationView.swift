@@ -2,7 +2,6 @@
 //  CollectionCreationView.swift
 //  MetGallery
 //
-//  Created by yaxin on 2025-05-03.
 //
 
 import SwiftUI
@@ -11,6 +10,7 @@ import SwiftData
 struct CollectionCreationView: View {
     @Environment(\.modelContext) private var context
     @State private var inputText: String = ""
+    @State private var errorMessage: String? = nil
     @Binding var isPresented: Bool
     @FocusState private var focused
     var body: some View {
@@ -18,7 +18,15 @@ struct CollectionCreationView: View {
             Form {
                 Text("Collection Name:")
                 TextField("", text: $inputText)
+                    .onChange(of: inputText) { _, newValue in
+                        validateInput(text: newValue)
+                    }
                     .focused($focused)
+                    .lineLimit(1)
+                if let error = errorMessage {
+                    Text(error)
+                        .foregroundColor(.red)
+                }
             }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -34,17 +42,19 @@ struct CollectionCreationView: View {
                             inputText = ""
                         }
                         do {
-                            try createNewCollection(name: inputText)
+                            let collectionName = inputText.trimmingCharacters(in: .whitespacesAndNewlines)
+                            try createNewCollection(name: collectionName)
                         } catch {
                             print(error.localizedDescription)
                         }
-                    }
+                    }.disabled(errorMessage != nil)
                 }
             }
             .padding()
         }
         .onAppear {
             focused = true
+            validateInput(text: inputText)
         }
     }
     
@@ -53,8 +63,8 @@ struct CollectionCreationView: View {
         context.insert(collection)
         try context.save()
     }
+    
+    private func validateInput(text: String) {
+        errorMessage = text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "Collection name cannot be empty" : nil
+    }
 }
-
-//#Preview {
-//    CollectionCreationView()
-//}
