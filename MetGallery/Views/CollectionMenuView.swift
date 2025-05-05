@@ -13,10 +13,12 @@ struct CollectionMenuView: View {
     @Environment(\.dismiss) private var dismiss
     @Query private var collections: [APCollection]
     @State private var selectedCollections: Set<String>
+    @Binding var layerText: String?
     let ap: Artpiece
     
-    init(ap: Artpiece) {
+    init(ap: Artpiece, layerText: Binding<String?>) {
         self.ap = ap
+        self._layerText = layerText
         selectedCollections = Set(ap.collections.map {$0.name})
     }
     
@@ -35,12 +37,22 @@ struct CollectionMenuView: View {
                     Spacer()
                 } else {
                     HStack {
-                        Button("Cancel", role: .cancel, action: {
+                        Button {
+                            layerText = "Cancelled"
                             dismiss()
-                        })
+                        } label: {
+                            Image(systemName: "xmark.circle")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 25, height:25)
+                                .foregroundStyle(.red)
+                        }
                         Spacer()
                         Button(action: {
-                            defer {dismiss()}
+                            defer {
+                                layerText = "Saved"
+                                dismiss()
+                            }
                             for collection in collections {
                                 if selectedCollections.contains(collection.name) {
                                     if !collection.apList.contains(where: {$0.id == ap.id}){

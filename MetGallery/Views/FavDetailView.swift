@@ -6,12 +6,12 @@ struct FavDetailView: View {
     var apService: ArtpieceService
     @State private var fetchTask: Task<Void, Never>?
     @State private var fetchedHighResImage: UIImage?
-    @Binding var openShareSheet: Bool
+    @Binding var infoOn: Bool
     var body: some View {
         Group {
             ZStack {
                 if let highResImage = fetchedHighResImage {
-                    ZoomableImageView(image: Image(uiImage: highResImage), openShare: $openShareSheet)
+                    ZoomableImageView(image: Image(uiImage: highResImage), infoOn: $infoOn)
                 } else {
                     if let data = ap.cachedThumbnail, let uiImage = UIImage(data: data) {
                         Image(uiImage: uiImage)
@@ -26,7 +26,6 @@ struct FavDetailView: View {
                 }
             }
         }
-        .padding(30)
         .onAppear {
             Task {
                 fetchTask?.cancel()
@@ -46,7 +45,6 @@ struct FavDetailView: View {
         }
         .onDisappear {
             fetchTask?.cancel()
-            openShareSheet = false
         }
     }
 }

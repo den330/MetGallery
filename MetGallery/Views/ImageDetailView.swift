@@ -17,14 +17,13 @@ struct ImageDetailView: View {
     @Query private var aps: [Artpiece]
     @State private var fetchTask: Task<Void, Never>?
     @State var highResImage: UIImage?
-    @State var isFav: Bool? = false
-    @Binding var openShareSheet: Bool
+    @Binding var infoOn: Bool
     @Environment(\.modelContext) private var context
     
     var body: some View {
         Group {
             if let image = highResImage {
-                ZoomableImageView(image: Image(uiImage: image), isFav: $isFav, openShare: $openShareSheet)
+                ZoomableImageView(image: Image(uiImage: image), infoOn: $infoOn)
             } else {
                 Image(systemName: "photo")
                     .resizable()
@@ -34,7 +33,6 @@ struct ImageDetailView: View {
             }
         }
         .onAppear {
-            isFav = aps.map{$0.id}.contains(DTO.objectID)
             fetchTask?.cancel()
             fetchTask = Task {
                 try? await Task.sleep(nanoseconds: 800_000_000)
@@ -46,36 +44,8 @@ struct ImageDetailView: View {
                 }
             }
         }
-        .onChange(of: isFav) {
-            do {
-                if isFav ?? false {
-                    let ap = Artpiece.fromDTO(DTO)
-                    Task {
-                        do {
-                            ap.cachedThumbnail = try await apService.fetchLowResImageData(for: DTO.objectID, urlStr: DTO.primaryImageSmall)
-                        } catch {
-                            print("low res image save fails \(error)")
-                        }
-                        context.insert(ap)
-                        try context.save()
-                    }
-                } else {
-                    let objID = DTO.objectID
-                    let fetchRequest = FetchDescriptor<Artpiece>(
-                        predicate: #Predicate { $0.id == objID }
-                    )
-                    if let ap = try context.fetch(fetchRequest).first {
-                        context.delete(ap)
-                        try context.save()
-                    }
-                }
-            } catch {
-                print("\(error)")
-            }
-        }
         .onDisappear {
             fetchTask?.cancel()
-            openShareSheet = false
         }
     }
 }

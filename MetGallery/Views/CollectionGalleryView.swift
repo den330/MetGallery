@@ -67,6 +67,7 @@ struct CollectionGalleryView: View {
                 }, label: {
                     Image(systemName: "trash")
                         .tint(.red)
+                        .symbolEffect(.pulse)
                 })
             }
         }

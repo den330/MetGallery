@@ -12,13 +12,13 @@ struct CollectionDetailView: View {
     var apService: ArtpieceServiceProtocol
     @State private var fetchTask: Task<Void, Never>?
     @State private var highResImage: UIImage?
+    @Binding var infoOn: Bool
     @Environment(\.modelContext) private var context
-    @Binding var openShare: Bool
 
     var body: some View {
         ZStack {
             if let highResImage = highResImage {
-                ZoomableImageView(image: Image(uiImage: highResImage), openShare: $openShare)
+                ZoomableImageView(image: Image(uiImage: highResImage), infoOn: $infoOn)
             } else {
                 Image(systemName: "photo")
                     .resizable()

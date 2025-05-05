@@ -23,25 +23,41 @@ struct CollectionPageView: View {
             VStack {
                 TabView(selection: $currentIndex) {
                     ForEach(Array(sortedApList.enumerated()), id: \.1.id) { index, ap in
-                        CollectionDetailView(ap: ap, apService: ArtpieceService(context: context), openShare: $openShare)
+                        CollectionDetailView(ap: ap, apService: ArtpieceService(context: context), infoOn: $showInfo)
                             .tag(index)
                     }
                 }
-                .padding(.vertical, 20)
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
                 if let currentIndex = currentIndex, showInfo == true {
                     let ap = sortedApList[currentIndex]
-                    List {
-                        Text("Title: \(ap.title)")
-                        Text("Department: \(ap.department)")
-                        Text("Artist: \(ap.artist)")
-                        Text("Year: \(ap.year)")
+                    VStack {
+                        HStack(alignment: .center) {
+                            Button {
+                                openShare.toggle()
+                            } label: {
+                                Image(systemName: "square.and.arrow.up")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 20, height: 20)
+                                    .foregroundStyle(.white)
+                            }
+                            .padding()
+                            .background(Capsule().fill(.gray))
+                            Spacer()
+                        }
+                        .padding(.top, 15)
+                        List {
+                            Text("Title: \(ap.title)")
+                            Text("Department: \(ap.department)")
+                            Text("Artist: \(ap.artist)")
+                            Text("Year: \(ap.year)")
+                        }
+                        .lineLimit(2)
+                        .transition(.asymmetric(
+                            insertion: .scale,
+                            removal: .slide
+                        ))
                     }
-                    .lineLimit(2)
-                    .transition(.asymmetric(
-                        insertion: .scale,
-                        removal: .slide
-                    ))
                 }
             }
             .toolbar {
@@ -63,6 +79,7 @@ struct CollectionPageView: View {
                         }
                     }, label: {
                         Image(systemName: "exclamationmark.circle")
+                            .symbolEffect(.breathe)
                     })
                 }
                 

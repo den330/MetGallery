@@ -7,16 +7,14 @@ struct ZoomableImageView: View {
     @State private var lastScale: CGFloat = 1.0
     @State private var offset: CGSize = .zero
     @State private var lastOffset: CGSize = .zero
-    @Binding var isFav: Bool?
-    @Binding var openShare: Bool
+    @Binding var infoOn: Bool
     private let minScale: CGFloat = 1.0
     private let maxScale: CGFloat = 3.0
     let isPad = UIDevice.current.userInterfaceIdiom == .pad
     
-    init(image: Image, isFav: Binding<Bool?>? = nil, openShare: Binding<Bool>) {
+    init(image: Image, infoOn: Binding<Bool>) {
         self.image = image
-        self._isFav = isFav ?? .constant(nil)
-        self._openShare = openShare
+        self._infoOn = infoOn
     }
     
     var body: some View {
@@ -36,38 +34,6 @@ struct ZoomableImageView: View {
                         withAnimation(.easeInOut(duration: 1)) {
                             scale = 1
                             offset = .zero
-                        }
-                    }
-                    .overlay(alignment: .topTrailing) {
-                        if isFav == nil {
-                            EmptyView()
-                        } else {
-                            Image(systemName: isFav! ? "heart.fill" : "heart")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 32, height: 32)
-                                .padding(15)
-                                .foregroundStyle(.red)
-                                .onTapGesture {
-                                    isFav!.toggle()
-                                }
-                                .opacity(scale == 1 ? 1 : 0)
-                                .disabled(scale == 1 ? false : true)
-                        }
-                    }
-                    .overlay(alignment: .bottomLeading) {
-                        Button {
-                            openShare.toggle()
-                        } label: {
-                            Image(systemName: "square.and.arrow.up")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: isPad ? 30 : 15, height: isPad ? 30 : 15)
-                                .padding(5)
-                                .foregroundStyle(.white)
-                                .background(.black.opacity(0.5))
-                                .opacity(scale == 1 ? 1 : 0)
-                                .disabled(scale == 1 ? false : true)
                         }
                     }
             }

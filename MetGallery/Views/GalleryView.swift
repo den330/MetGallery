@@ -11,6 +11,7 @@ import Foundation
 
 struct GalleryView: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var context
     @Query private var artPieces: [Artpiece]
     @State var keyword: String?
     @State var inputText: String = ""
@@ -143,8 +144,8 @@ struct GalleryView: View {
                     get: {selectedIndex != nil},
                     set: {if !$0 { selectedIndex = nil } }
                 )) {
-                    ImagePageView(currentIndex: $selectedIndex, DTOList: viewModel.artpieceDTOList)
-                }
+                    ImagePageView(currentIndex: $selectedIndex, DTOList: $viewModel.artpieceDTOList, apService: ArtpieceService(context: context))
+                    }
             }
             .padding()
             .background(Color.black)
