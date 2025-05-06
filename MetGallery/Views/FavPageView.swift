@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import InterfaceOrientation
 
 struct FavPageView: View {
     @Environment(\.modelContext) private var context
@@ -83,6 +84,7 @@ struct FavPageView: View {
                 ))
             }
         }
+        .interfaceOrientations([showInfo && !isPad ? .portrait : .all])
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button(action: {

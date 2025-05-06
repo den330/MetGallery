@@ -9,7 +9,9 @@ import SwiftUI
 
 @main
 struct MetGalleryApp: App {
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @State private var isLoading = true
+    
     var body: some Scene {
         WindowGroup {
             Group {

@@ -18,7 +18,7 @@ struct CollectionDetailView: View {
     var body: some View {
         ZStack {
             if let highResImage = highResImage {
-                ZoomableImageView(image: Image(uiImage: highResImage), infoOn: $infoOn)
+                ZoomableImageView(image: Image(uiImage: highResImage), infoOn: infoOn)
             } else {
                 if let data = ap.cachedThumbnail, let uiImage = UIImage(data: data) {
                     Image(uiImage: uiImage)

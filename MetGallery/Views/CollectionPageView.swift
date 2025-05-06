@@ -7,8 +7,10 @@
 
 import SwiftUI
 import SwiftData
+import InterfaceOrientation
 
 struct CollectionPageView: View {
+    let isPad = UIDevice.current.userInterfaceIdiom == .pad
     @Environment(\.modelContext) private var context
     @Binding var currentIndex: Int?
     @State private var openShare: Bool = false
@@ -60,6 +62,7 @@ struct CollectionPageView: View {
                     }
                 }
             }
+            .interfaceOrientations([showInfo && !isPad ? .portrait : .all])
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(action: {

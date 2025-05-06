@@ -7,6 +7,8 @@
 
 import SwiftUI
 import SwiftData
+import InterfaceOrientation
+
 
 struct ImagePageView: View {
     @Environment(\.modelContext) private var context
@@ -18,6 +20,8 @@ struct ImagePageView: View {
     @Binding var DTOList: [ArtpieceDTO]
     @Environment(\.dismiss) private var dismiss
     @State private var showShareSheet: Bool = false
+    let isPad = UIDevice.current.userInterfaceIdiom == .pad
+
     var apService: ArtpieceServiceProtocol
     var body: some View {
         NavigationStack {
@@ -117,6 +121,7 @@ struct ImagePageView: View {
                     .zIndex(1)
                 }
             }
+            .interfaceOrientations([showInfo && !isPad ? .portrait : .all])
             .animation(.easeInOut(duration: 1), value: showHint)
             .animation(.easeInOut(duration: 0.5), value: showInfo)
             .sheet(isPresented: $showShareSheet) {

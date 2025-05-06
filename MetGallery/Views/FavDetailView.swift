@@ -11,7 +11,7 @@ struct FavDetailView: View {
         Group {
             ZStack {
                 if let highResImage = fetchedHighResImage {
-                    ZoomableImageView(image: Image(uiImage: highResImage), infoOn: $infoOn)
+                    ZoomableImageView(image: Image(uiImage: highResImage), infoOn: infoOn)
                 } else {
                     if let data = ap.cachedThumbnail, let uiImage = UIImage(data: data) {
                         Image(uiImage: uiImage)

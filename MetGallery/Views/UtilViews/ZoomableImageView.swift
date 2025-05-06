@@ -7,14 +7,14 @@ struct ZoomableImageView: View {
     @State private var lastScale: CGFloat = 1.0
     @State private var offset: CGSize = .zero
     @State private var lastOffset: CGSize = .zero
-    @Binding var infoOn: Bool
+    let infoOn: Bool
     private let minScale: CGFloat = 1.0
     private let maxScale: CGFloat = 3.0
     let isPad = UIDevice.current.userInterfaceIdiom == .pad
     
-    init(image: Image, infoOn: Binding<Bool>) {
+    init(image: Image, infoOn: Bool) {
         self.image = image
-        self._infoOn = infoOn
+        self.infoOn = infoOn
     }
     
     var body: some View {
@@ -38,6 +38,9 @@ struct ZoomableImageView: View {
                     }
             }
             .clipped()
+            .onChange(of: geometry.size) {
+                adjustOffsetForBounds(geometry: geometry)
+            }
         }
         .onChange(of: infoOn) {
             withAnimation(.easeInOut(duration: 0.5)) {

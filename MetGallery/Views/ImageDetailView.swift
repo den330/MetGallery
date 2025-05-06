@@ -23,7 +23,7 @@ struct ImageDetailView: View {
     var body: some View {
         Group {
             if let image = highResImage {
-                ZoomableImageView(image: Image(uiImage: image), infoOn: $infoOn)
+                ZoomableImageView(image: Image(uiImage: image), infoOn: infoOn)
             } else {
                 Image(systemName: "photo")
                     .resizable()
