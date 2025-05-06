@@ -27,7 +27,7 @@ struct ZoomableImageView: View {
                     .scaleEffect(scale)
                     .offset(offset)
                     .gesture(
-                        magnificationGesture(geometry: geometry)
+                        infoOn ? nil : magnificationGesture(geometry: geometry)
                             .simultaneously(with: scale > minScale ? dragGesture(geometry: geometry) : nil)
                     )
                     .onTapGesture(count: 2) {
@@ -38,6 +38,12 @@ struct ZoomableImageView: View {
                     }
             }
             .clipped()
+        }
+        .onChange(of: infoOn) {
+            withAnimation(.easeInOut(duration: 0.5)) {
+                scale = 1
+                offset = .zero
+            }
         }
     }
     
