@@ -54,7 +54,7 @@ struct CollectionPageView: View {
                             Text("Artist: \(ap.artist)")
                             Text("Year: \(ap.year)")
                         }
-                        .lineLimit(2)
+                        .lineLimit(3)
                         .transition(.asymmetric(
                             insertion: .scale,
                             removal: .slide

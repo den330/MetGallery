@@ -77,7 +77,7 @@ struct FavPageView: View {
                         Text("Year: \(currentAp.year)")
                     }
                 }
-                .lineLimit(2)
+                .lineLimit(3)
                 .transition(.asymmetric(
                     insertion: .scale,
                     removal: .slide
