@@ -99,11 +99,12 @@ struct ImagePageView: View {
                             }
                             .padding(.top, 15)
                             List {
-                                Text("Title: \(currentDTO.title)")
-                                Text("Department: \(currentDTO.department)")
-                                Text("Artist: \(currentDTO.artistDisplayName)")
-                                Text("Year: \(currentDTO.objectDate)")
+                                Text("Title: \(currentDTO.title)").listRowBackground(Color.gray)
+                                Text("Department: \(currentDTO.department)").listRowBackground(Color.gray)
+                                Text("Artist: \(currentDTO.artistDisplayName)").listRowBackground(Color.gray)
+                                Text("Year: \(currentDTO.objectDate)").listRowBackground(Color.gray)
                             }
+                            .scrollContentBackground(.hidden)
                         }
                         .lineLimit(3)
                         .transition(.asymmetric(
@@ -121,6 +122,19 @@ struct ImagePageView: View {
                     .zIndex(1)
                 }
             }
+            .background(
+                showInfo ?
+                LinearGradient(
+                    gradient: Gradient(stops: [
+                        .init(color: Color(red: 46/255, green: 59/255, blue: 78/255), location: 0.0),
+                        .init(color: Color(red: 20/255, green: 30/255, blue: 45/255), location: 0.6),
+                        .init(color: Color(red: 28/255, green: 28/255, blue: 30/255), location: 1.0)
+                    ]),
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .ignoresSafeArea() : nil
+            )
             .interfaceOrientations([showInfo && !isPad ? .portrait : .all])
             .animation(.easeInOut(duration: 1), value: showHint)
             .animation(.easeInOut(duration: 0.5), value: showInfo)

@@ -1,6 +1,5 @@
 China
 Joy
-Happy
 Mad
 Fire
 Europe
@@ -13,7 +12,6 @@ Cat
 Tiger
 Dog
 Mountain
-Sun
 Moon
 Star
 Cloud

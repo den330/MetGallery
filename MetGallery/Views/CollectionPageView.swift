@@ -49,11 +49,12 @@ struct CollectionPageView: View {
                         }
                         .padding(.top, 15)
                         List {
-                            Text("Title: \(ap.title)")
-                            Text("Department: \(ap.department)")
-                            Text("Artist: \(ap.artist)")
-                            Text("Year: \(ap.year)")
+                            Text("Title: \(ap.title)").listRowBackground(Color.gray)
+                            Text("Department: \(ap.department)").listRowBackground(Color.gray)
+                            Text("Artist: \(ap.artist)").listRowBackground(Color.gray)
+                            Text("Year: \(ap.year)").listRowBackground(Color.gray)
                         }
+                        .scrollContentBackground(.hidden)
                         .lineLimit(3)
                         .transition(.asymmetric(
                             insertion: .scale,
@@ -62,6 +63,19 @@ struct CollectionPageView: View {
                     }
                 }
             }
+            .background(
+                showInfo ?
+                LinearGradient(
+                    gradient: Gradient(stops: [
+                        .init(color: Color(red: 46/255, green: 59/255, blue: 78/255), location: 0.0),
+                        .init(color: Color(red: 20/255, green: 30/255, blue: 45/255), location: 0.6),
+                        .init(color: Color(red: 28/255, green: 28/255, blue: 30/255), location: 1.0)
+                    ]),
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .ignoresSafeArea() : nil
+            )
             .interfaceOrientations([showInfo && !isPad ? .portrait : .all])
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

@@ -59,7 +59,10 @@ struct FavListView: View {
     var body: some View {
         Group {
             if aps.isEmpty {
-                Text("You have not picked any favorite art pieces yet.")
+                ZStack {
+                    Text("You have not picked any favorite art pieces yet.")
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
                 NavigationStack {
                     List {
@@ -101,6 +104,7 @@ struct FavListView: View {
                                             .font(.caption)
                                         }
                                     }
+                                    .listRowBackground(Color(red: 28/255, green: 32/255, blue: 38/255).opacity(0.6))
                                 }
                                 .onDelete { offsets in
                                     deleteFav(from: sectionItem, at: offsets)
@@ -108,6 +112,19 @@ struct FavListView: View {
                             }
                         }
                     }
+                    .scrollContentBackground(.hidden)
+                    .background(
+                        LinearGradient(
+                            gradient: Gradient(stops: [
+                                .init(color: Color(red: 46/255, green: 59/255, blue: 78/255), location: 0.0),
+                                .init(color: Color(red: 20/255, green: 30/255, blue: 45/255), location: 0.6),
+                                .init(color: Color(red: 28/255, green: 28/255, blue: 30/255), location: 1.0)
+                            ]),
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                        .ignoresSafeArea()
+                    )
                     .navigationTitle("Favorite List")
                     .navigationBarTitleDisplayMode(.inline)
                     .navigationDestination(for: Artpiece.self) { ap in
@@ -118,12 +135,12 @@ struct FavListView: View {
                     .searchable(text: $searchText, placement: .navigationBarDrawer)
                     .toolbar {
                         ToolbarItem(placement: .topBarLeading) {
-                                Button {
-                                    showChartView.toggle()
-                                } label: {
-                                    Image(systemName: "chart.pie")
-                                        .foregroundStyle(.white)
-                                }
+                            Button {
+                                showChartView.toggle()
+                            } label: {
+                                Image(systemName: "chart.pie")
+                                    .foregroundStyle(.white)
+                            }
                         }
                         ToolbarItem(placement: .topBarTrailing) {
                             Button {
@@ -139,6 +156,18 @@ struct FavListView: View {
                 }
             }
         }
+        .background(
+            LinearGradient(
+                gradient: Gradient(stops: [
+                    .init(color: Color(red: 46/255, green: 59/255, blue: 78/255), location: 0.0),
+                    .init(color: Color(red: 20/255, green: 30/255, blue: 45/255), location: 0.6),
+                    .init(color: Color(red: 28/255, green: 28/255, blue: 30/255), location: 1.0)
+                ]),
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea()
+        )
         .sheet(isPresented: $showChartView) {
             ChartView()
                 .presentationDetents([.height(330)])

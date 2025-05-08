@@ -44,6 +44,15 @@ struct CollectionGalleryView: View {
                                             .scaledToFit()
                                     }
                                 }
+                                .overlay {
+                                    Rectangle()
+                                        .stroke(LinearGradient(colors:
+                                                                [Color("FrameColor1"),
+                                                                 Color("FrameColor2"),
+                                                                 Color("FrameColor1"),
+                                                                 Color("FrameColor2")], startPoint: .topLeading, endPoint: .bottomTrailing), lineWidth: 5)
+                                        .shadow(radius: 5)
+                                }
                                 .onTapGesture {
                                     selectedIndex = index
                                 }
@@ -59,6 +68,18 @@ struct CollectionGalleryView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
             }
+            .background(
+                LinearGradient(
+                    gradient: Gradient(stops: [
+                        .init(color: Color(red: 46/255, green: 59/255, blue: 78/255), location: 0.0),
+                        .init(color: Color(red: 20/255, green: 30/255, blue: 45/255), location: 0.6),
+                        .init(color: Color(red: 28/255, green: 28/255, blue: 30/255), location: 1.0)
+                    ]),
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .ignoresSafeArea()
+            )
         }
         .toolbar {
             ToolbarItem(placement: .destructiveAction) {

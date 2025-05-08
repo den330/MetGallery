@@ -71,11 +71,12 @@ struct FavPageView: View {
                     }
                     .padding(.top, 15)
                     List {
-                        Text("Title: \(currentAp.title)")
-                        Text("Department: \(currentAp.department)")
-                        Text("Artist: \(currentAp.artist)")
-                        Text("Year: \(currentAp.year)")
+                        Text("Title: \(currentAp.title)").listRowBackground(Color.gray)
+                        Text("Department: \(currentAp.department)").listRowBackground(Color.gray)
+                        Text("Artist: \(currentAp.artist)").listRowBackground(Color.gray)
+                        Text("Year: \(currentAp.year)").listRowBackground(Color.gray)
                     }
+                    .scrollContentBackground(.hidden)
                 }
                 .lineLimit(3)
                 .transition(.asymmetric(
@@ -84,6 +85,19 @@ struct FavPageView: View {
                 ))
             }
         }
+        .background(
+            showInfo ?
+            LinearGradient(
+                gradient: Gradient(stops: [
+                    .init(color: Color(red: 46/255, green: 59/255, blue: 78/255), location: 0.0),
+                    .init(color: Color(red: 20/255, green: 30/255, blue: 45/255), location: 0.6),
+                    .init(color: Color(red: 28/255, green: 28/255, blue: 30/255), location: 1.0)
+                ]),
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea() : nil
+        )
         .interfaceOrientations([showInfo && !isPad ? .portrait : .all])
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
