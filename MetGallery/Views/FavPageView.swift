@@ -35,7 +35,7 @@ struct FavPageView: View {
                 }
             }
             .tabViewStyle(
-                PageTabViewStyle(indexDisplayMode: .automatic)
+                PageTabViewStyle(indexDisplayMode: .never)
             )
             if showInfo {
                 let currentAp = aps[currentIndex]
@@ -75,6 +75,17 @@ struct FavPageView: View {
                         Text("Department: \(currentAp.department)").listRowBackground(Color.gray)
                         Text("Artist: \(currentAp.artist)").listRowBackground(Color.gray)
                         Text("Year: \(currentAp.year)").listRowBackground(Color.gray)
+                        if let linkResource = currentAp.linkResource, let url = URL(string: linkResource), !linkResource.isEmpty {
+                            HStack {
+                                Text("To know more:")
+                                Link(destination: url, label: {
+                                    Text("Click")
+                                        .font(.subheadline)
+                                        .bold()
+                                        .underline()
+                                })
+                            }.listRowBackground(Color.gray)
+                        }
                     }
                     .scrollContentBackground(.hidden)
                 }

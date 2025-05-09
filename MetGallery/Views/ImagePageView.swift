@@ -9,7 +9,6 @@ import SwiftUI
 import SwiftData
 import InterfaceOrientation
 
-
 struct ImagePageView: View {
     @Environment(\.modelContext) private var context
     @Query private var artPieces: [Artpiece]
@@ -33,7 +32,7 @@ struct ImagePageView: View {
                                 .tag(index)
                         }
                     }.tabViewStyle(
-                        PageTabViewStyle(indexDisplayMode: .automatic)
+                        PageTabViewStyle(indexDisplayMode: .never)
                     )
                     .onAppear {
                         showHint = !hasSeenImageDetailHint
@@ -103,6 +102,17 @@ struct ImagePageView: View {
                                 Text("Department: \(currentDTO.department)").listRowBackground(Color.gray)
                                 Text("Artist: \(currentDTO.artistDisplayName)").listRowBackground(Color.gray)
                                 Text("Year: \(currentDTO.objectDate)").listRowBackground(Color.gray)
+                                if let linkResource = currentDTO.objectURL, let url = URL(string: linkResource), !linkResource.isEmpty {
+                                    HStack {
+                                        Text("To know more:")
+                                        Link(destination: url, label: {
+                                            Text("Click")
+                                                .font(.subheadline)
+                                                .bold()
+                                                .underline()
+                                        })
+                                    }.listRowBackground(Color.gray)
+                                }
                             }
                             .scrollContentBackground(.hidden)
                         }

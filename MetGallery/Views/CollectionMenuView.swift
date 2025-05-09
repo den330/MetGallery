@@ -32,6 +32,7 @@ struct CollectionMenuView: View {
                     ZStack {
                         Text("Please create a collection first")
                             .font(.title)
+                            .padding()
                     }
                     Spacer()
                     Spacer()

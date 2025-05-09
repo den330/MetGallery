@@ -12,8 +12,9 @@ final class Artpiece: Identifiable {
     var cachedThumbnail: Data?
     var department: String
     var collections: [APCollection] = []
+    var linkResource: String?
     
-    init(id: Int, imageUrl: URL?, imageUrlSmall: URL?, artist: String, title: String, year: String, department: String) {
+    init(id: Int, imageUrl: URL?, imageUrlSmall: URL?, artist: String, title: String, year: String, department: String, linkResource: String?) {
         self.id = id
         self.imageUrl = imageUrl
         self.imageUrlSmall = imageUrlSmall
@@ -21,6 +22,7 @@ final class Artpiece: Identifiable {
         self.title = title
         self.year = year
         self.department = department
+        self.linkResource = linkResource
     }
 }
 
@@ -33,7 +35,8 @@ extension Artpiece {
             artist: dto.artistDisplayName == "" ? "Unknown" : dto.artistDisplayName,
             title: dto.title,
             year: dto.objectDate == "" ? "Unknown" : dto.objectDate,
-            department: dto.department
+            department: dto.department,
+            linkResource: dto.objectURL
         )
     }
 }
@@ -47,6 +50,7 @@ struct ArtpieceDTO: Decodable, Equatable {
     var primaryImageSmall: String
     var isFav: Bool? = false
     var department: String
+    var objectURL: String?
     static func == (lhs: ArtpieceDTO, rhs: ArtpieceDTO) -> Bool {
         lhs.objectID == rhs.objectID
     }

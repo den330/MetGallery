@@ -33,7 +33,7 @@ struct GalleryView: View {
         GeometryReader { geometry in
             let isLandscape = geometry.size.width > geometry.size.height
             let isPad = UIDevice.current.userInterfaceIdiom == .pad
-            let columnCount = (isPad && isLandscape) ? 4 : 3
+            let columnCount = (isPad && isLandscape) ? 4 : isPad ? 3 : 2
             let columns = Array(repeating: GridItem(.flexible()), count: columnCount)
             VStack(alignment: .center) {
                 TextField("", text: $inputText, prompt: Text(promptText)
@@ -88,6 +88,7 @@ struct GalleryView: View {
                                                                      Color("FrameColor2")], startPoint: .topLeading, endPoint: .bottomTrailing), lineWidth: 5)
                                             .shadow(radius: 5)
                                     }
+                                    .padding(.vertical, isPad ? 10 : 5)
                                     .onAppear {
                                         if artpieceDTO.objectID == viewModel.artpieceDTOList.last?.objectID {
                                             Task {
@@ -106,7 +107,8 @@ struct GalleryView: View {
                                         .aspectRatio(1, contentMode: .fit)
                                 }
                             }
-                            .frame(width: geometry.size.width / CGFloat(columnCount + 1), height: 200)
+                            .frame(width: geometry.size.width / CGFloat(columnCount + 1))
+                            .frame(maxHeight: 200)
                         }
                     }
                 }

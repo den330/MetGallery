@@ -55,7 +55,9 @@ struct APCollectionView: View {
                                             }
                                             Text("\(collection.name)").lineLimit(1).truncationMode(.tail)
                                         }
-                                        .padding()
+                                        .padding(.vertical, isPad ? 10 : 5)
+                                        .frame(width: geometry.size.width / CGFloat(columnCount + 1))
+                                        .frame(maxHeight: 200)
                                     }
                                 }
                             }
@@ -80,6 +82,8 @@ struct APCollectionView: View {
                     )
                     .ignoresSafeArea()
                 )
+                .navigationTitle(Text("Collections"))
+                .navigationBarTitleDisplayMode(.inline)
                 .navigationDestination(for: APCollection.self, destination: { collection in
                     CollectionGalleryView(collection: collection)
                 })

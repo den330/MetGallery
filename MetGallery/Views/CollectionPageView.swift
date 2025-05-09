@@ -29,7 +29,7 @@ struct CollectionPageView: View {
                             .tag(index)
                     }
                 }
-                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
+                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
                 if let currentIndex = currentIndex, showInfo == true && currentIndex < sortedApList.count {
                     let ap = sortedApList[currentIndex]
                     VStack {
@@ -53,6 +53,17 @@ struct CollectionPageView: View {
                             Text("Department: \(ap.department)").listRowBackground(Color.gray)
                             Text("Artist: \(ap.artist)").listRowBackground(Color.gray)
                             Text("Year: \(ap.year)").listRowBackground(Color.gray)
+                            if let linkResource = ap.linkResource, let url = URL(string: linkResource), !linkResource.isEmpty {
+                                HStack {
+                                    Text("To know more:")
+                                    Link(destination: url, label: {
+                                        Text("Click")
+                                            .font(.subheadline)
+                                            .bold()
+                                            .underline()
+                                    })
+                                }.listRowBackground(Color.gray)
+                            }
                         }
                         .scrollContentBackground(.hidden)
                         .lineLimit(3)

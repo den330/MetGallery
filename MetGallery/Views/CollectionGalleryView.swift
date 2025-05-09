@@ -53,6 +53,9 @@ struct CollectionGalleryView: View {
                                                                  Color("FrameColor2")], startPoint: .topLeading, endPoint: .bottomTrailing), lineWidth: 5)
                                         .shadow(radius: 5)
                                 }
+                                .padding(.vertical, isPad ? 10 : 5)
+                                .frame(width: geometry.size.width / CGFloat(columnCount + 1))
+                                .frame(maxHeight: 200)
                                 .onTapGesture {
                                     selectedIndex = index
                                 }
@@ -64,6 +67,7 @@ struct CollectionGalleryView: View {
                     ZStack(alignment: .center) {
                         Text("There is no image added to this collection.")
                             .font(.title)
+                            .padding()
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
