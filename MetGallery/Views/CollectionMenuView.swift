@@ -15,6 +15,7 @@ struct CollectionMenuView: View {
     @State private var selectedCollections: Set<String>
     @Binding var layerText: String?
     let ap: Artpiece
+    let isPad = UIDevice.current.userInterfaceIdiom == .pad
     
     init(ap: Artpiece, layerText: Binding<String?>) {
         self.ap = ap
@@ -30,12 +31,11 @@ struct CollectionMenuView: View {
             Group {
                 if collections.isEmpty {
                     ZStack {
-                        Text("Please create a collection first")
+                        Text("Please create a collection first.")
                             .font(.title)
-                            .padding()
+                            .padding(.horizontal, 5)
                     }
-                    Spacer()
-                    Spacer()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {
                     Group {
                         HStack {

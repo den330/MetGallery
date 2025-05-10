@@ -79,7 +79,7 @@ struct FavPageView: View {
                             HStack {
                                 Text("To know more:")
                                 Link(destination: url, label: {
-                                    Text("Click")
+                                    Text("Check this artpiece on the official site")
                                         .font(.subheadline)
                                         .bold()
                                         .underline()
@@ -89,7 +89,6 @@ struct FavPageView: View {
                     }
                     .scrollContentBackground(.hidden)
                 }
-                .lineLimit(3)
                 .transition(.asymmetric(
                     insertion: .scale,
                     removal: .slide

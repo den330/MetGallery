@@ -60,7 +60,15 @@ struct FavListView: View {
         Group {
             if aps.isEmpty {
                 ZStack {
-                    Text("You have not picked any favorite art pieces yet.")
+                    VStack {
+                        Spacer()
+                        PulsatingCirclesView()
+                            .frame(width: 180, height: 180)
+                        Text("You have not picked any favorite art pieces yet.")
+                            .font(.title)
+                            .padding(20)
+                        Spacer()
+                    }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {

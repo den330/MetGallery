@@ -10,6 +10,8 @@ import SwiftData
 
 struct CollectionGalleryView: View {
     
+    @Namespace private var ns
+
     @Query private var aps: [Artpiece]
     @State var collection: APCollection
     @State private var selectedIndex: Int?
@@ -64,10 +66,14 @@ struct CollectionGalleryView: View {
                         .padding()
                     }
                 } else {
-                    ZStack(alignment: .center) {
-                        Text("There is no image added to this collection.")
-                            .font(.title)
-                            .padding()
+                    ZStack {
+                        VStack {
+                            PulsatingCirclesView()
+                                .frame(width: 180, height: 180)
+                            Text("There is no image added to this collection.")
+                                .font(.title)
+                                .padding(20)
+                        }
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
