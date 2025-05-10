@@ -8,28 +8,6 @@
 import SwiftUI
 import SwiftData
 
-struct PulsatingCirclesView: View {
-    var body: some View {
-        TimelineView(.animation) { viewContext in
-            Canvas { ctx, size in
-                let t = viewContext.date.timeIntervalSinceReferenceDate
-                let center = CGPoint(x: size.width / 2, y: size.height / 2)
-                
-                for i in 0..<100 {
-                    let angle = Double(i) / 100 * .pi * 2
-                    let radius = CGFloat(50 + 30 * sin(t + Double(i)))
-                    let p = CGPoint(
-                        x: center.x + cos(angle) * radius,
-                        y: center.y + sin(angle) * radius
-                    )
-                    let circle = Path(ellipseIn: CGRect(origin: p, size: .init(width: 5, height: 5)))
-                    ctx.fill(circle, with: .color(.white))
-                }
-            }
-        }
-    }
-}
-
 struct APCollectionView: View {
     @Query private var collections: [APCollection]
     @State private var presentCreationSheet = false

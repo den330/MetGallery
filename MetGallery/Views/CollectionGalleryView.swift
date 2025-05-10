@@ -122,7 +122,7 @@ struct CollectionGalleryView: View {
         .toolbar {
             ToolbarItem(placement: .principal) {
                 Text(collection.name)
-                    .font(.system(size: 40, weight: .bold))
+                    .font(.system(size: 30, weight: .bold))
             }
         }
         .onChange(of: aps) {
