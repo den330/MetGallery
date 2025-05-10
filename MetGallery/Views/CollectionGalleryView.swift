@@ -10,8 +10,6 @@ import SwiftData
 
 struct CollectionGalleryView: View {
     
-    @Namespace private var ns
-
     @Query private var aps: [Artpiece]
     @State var collection: APCollection
     @State private var selectedIndex: Int?
