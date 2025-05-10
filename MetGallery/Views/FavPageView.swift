@@ -2,7 +2,6 @@
 //  FavPageView.swift
 //  MetGallery
 //
-//  Created by yaxin on 2025-04-26.
 //
 
 import SwiftUI
@@ -11,6 +10,7 @@ import InterfaceOrientation
 
 struct FavPageView: View {
     @Environment(\.modelContext) private var context
+    @Environment(\.dismiss) private var dismiss
     @Query(sort: [SortDescriptor(\Artpiece.department, order: SortOrder.forward)]) private var aps: [Artpiece]
     @State var currentIndex: Int
     @State private var showShare = false
@@ -37,7 +37,7 @@ struct FavPageView: View {
             .tabViewStyle(
                 PageTabViewStyle(indexDisplayMode: .never)
             )
-            if showInfo {
+            if showInfo && currentIndex < aps.count {
                 let currentAp = aps[currentIndex]
                 VStack {
                     HStack(alignment: .center) {
@@ -95,6 +95,9 @@ struct FavPageView: View {
                     removal: .slide
                 ))
             }
+        }
+        .onDisappear {
+            dismiss()
         }
         .background(
             showInfo ?
