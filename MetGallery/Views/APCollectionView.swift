@@ -65,7 +65,7 @@ struct APCollectionView: View {
                     } else {
                         ZStack {
                             VStack {
-                                PulsatingCirclesView()
+                                SoundWave()
                                     .frame(width: 180, height: 180)
                                 Text("You do not have any collection yet.")
                                     .font(.title)

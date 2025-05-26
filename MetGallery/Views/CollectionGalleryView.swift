@@ -66,7 +66,7 @@ struct CollectionGalleryView: View {
                 } else {
                     ZStack {
                         VStack {
-                            PulsatingCirclesView()
+                            SoundBarChartView()
                                 .frame(width: 180, height: 180)
                             Text("There is no image added to this collection.")
                                 .font(.title)

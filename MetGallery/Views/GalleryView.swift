@@ -20,6 +20,7 @@ struct GalleryView: View {
     @State var appearedOnce = false
     @State var dotCount = 0
     @StateObject var viewModel: GalleryViewModel
+    @State private var adReady = false
     
     private var promptText: String {
         let baseText = "I am feeling"
@@ -37,7 +38,7 @@ struct GalleryView: View {
             let columns = Array(repeating: GridItem(.flexible()), count: columnCount)
             VStack(alignment: .center) {
                 TextField("", text: $inputText, prompt: Text(promptText)
-                    .foregroundColor(.gray) )
+                    .foregroundColor(.gray))
                     .foregroundColor(.blue)
                     .font(.system(size: 16, weight: .bold))
                     .padding()
@@ -48,6 +49,9 @@ struct GalleryView: View {
                     .onSubmit {
                         keyword = inputText
                     }
+                    AdView(adUnitID: "ca-app-pub-9748412059994439/1871000733", adReady: $adReady)
+                    .frame(height: 50)
+                    .padding(.bottom, adReady ? 15 : -50)
                 ScrollView {
                     LazyVGrid(columns: columns) {
                         ForEach(Array(viewModel.artpieceDTOList.enumerated()), id: \.1.objectID) { dtx, artpieceDTO in
