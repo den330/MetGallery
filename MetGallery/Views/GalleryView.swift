@@ -52,7 +52,7 @@ struct GalleryView: View {
                     }
                 
                 AdView(adUnitID: "ca-app-pub-9748412059994439/1871000733", adReady: $adReady, isPad: isPad)
-                    .frame(width: isPad ? 468 : 320, height: isPad ? 60 : 50)
+                    .frame(width: isPad ? 800 : 320, height: isPad ? 60 : 50)
                     .padding(.bottom, adReady ? 15 : -50)
                 ScrollView {
                     LazyVGrid(columns: columns) {
