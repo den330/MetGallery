@@ -33,7 +33,7 @@ struct CollectionMenuView: View {
                     ZStack {
                         Text("Please create a collection first.")
                             .font(.title)
-                            .padding(.horizontal, 5)
+                            .padding(.horizontal, 6)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else {

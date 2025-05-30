@@ -4,7 +4,7 @@ import GoogleMobileAds
 struct AdView: UIViewRepresentable {
     let adUnitID: String
     @Binding var adReady: Bool
-    
+    var isPad: Bool
     class Coordinator: NSObject, BannerViewDelegate {
         var parent: AdView
         
@@ -14,16 +14,11 @@ struct AdView: UIViewRepresentable {
         
         func bannerViewDidReceiveAd(_ bannerView: BannerView) {
             parent.adReady = true
-            print("Banner ad loaded successfully")
         }
         
         func bannerView(_ bannerView: BannerView, didFailToReceiveAdWithError error: Error) {
             parent.adReady = false
             print("Failed to load banner ad: \(error.localizedDescription)")
-        }
-        
-        func bannerViewWillPresentScreen(_ bannerView: BannerView) {
-            print("Banner ad will present screen")
         }
     }
     
@@ -32,7 +27,8 @@ struct AdView: UIViewRepresentable {
     }
     
     func makeUIView(context: Context) -> BannerView {
-        let banner = BannerView(adSize: AdSizeBanner)
+        
+        let banner = BannerView(adSize: isPad ? AdSizeFullBanner : AdSizeBanner)
         banner.adUnitID = adUnitID
         
         if let windowScene = UIApplication.shared.connectedScenes
@@ -40,7 +36,7 @@ struct AdView: UIViewRepresentable {
            let rootViewController = windowScene.windows.first?.rootViewController {
             banner.rootViewController = rootViewController
         } else {
-            print("Warning: Root view controller not found")
+            print("Warning: Root view controller not there")
         }
         
         banner.delegate = context.coordinator

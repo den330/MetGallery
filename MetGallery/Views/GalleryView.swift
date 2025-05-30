@@ -8,6 +8,7 @@
 import SwiftUI
 import SwiftData
 import Foundation
+import InterfaceOrientation
 
 struct GalleryView: View {
     @Environment(\.dismiss) private var dismiss
@@ -49,8 +50,9 @@ struct GalleryView: View {
                     .onSubmit {
                         keyword = inputText
                     }
-                    AdView(adUnitID: "ca-app-pub-9748412059994439/1871000733", adReady: $adReady)
-                    .frame(height: 50)
+                
+                AdView(adUnitID: "ca-app-pub-9748412059994439/1871000733", adReady: $adReady, isPad: isPad)
+                    .frame(width: isPad ? 468 : 320, height: isPad ? 60 : 50)
                     .padding(.bottom, adReady ? 15 : -50)
                 ScrollView {
                     LazyVGrid(columns: columns) {
