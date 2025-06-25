@@ -154,18 +154,17 @@ struct ImagePageView: View {
                     }
                 }
                 .toolbar {
-                    if geometry.size.width < geometry.size.height {
-                        ToolbarItem(placement: .cancellationAction) {
-                            Button(action: {
-                                dismiss()
-                            }, label: {
-                                Image(systemName: "xmark")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 20, height:20)
-                            })
-                        }
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button(action: {
+                            dismiss()
+                        }, label: {
+                            Image(systemName: "xmark")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 20, height:20)
+                        })
                     }
+                    
                     ToolbarItem(placement: .topBarTrailing) {
                         Button(action: {
                             showInfo.toggle()
