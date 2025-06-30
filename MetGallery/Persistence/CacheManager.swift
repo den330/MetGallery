@@ -33,3 +33,31 @@ final class CacheManager {
         cache.removeAllObjects()
     }
 }
+
+
+@MainActor
+final class LowResCacheManager {
+    static let shared = LowResCacheManager()
+    private var cache = NSCache<NSString, NSData>()
+    
+    private init() {
+        cache.countLimit = 100
+        cache.totalCostLimit = 50 * 1024 * 1024
+    }
+    
+    func insertData(_ data: Data, urlString: String) {
+        cache.setObject(data as NSData, forKey: urlString as NSString, cost: data.count)
+    }
+    
+    func data(for urlString: String) -> Data? {
+        cache.object(forKey: urlString as NSString) as? Data
+    }
+    
+    func removeData(for urlString: String) {
+        cache.removeObject(forKey: urlString as NSString)
+    }
+    
+    func removeAll() {
+        cache.removeAllObjects()
+    }
+}

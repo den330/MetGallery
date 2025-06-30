@@ -20,8 +20,10 @@ struct GalleryView: View {
     @State var selectedIndex: Int?
     @State var appearedOnce = false
     @State var dotCount = 0
+    @State var deadline: Date = Date()
     @StateObject var viewModel: GalleryViewModel
     @State private var adReady = false
+    @State private var countdown: Int = 0
     
     private var promptText: String {
         let baseText = "I am feeling"
@@ -33,6 +35,7 @@ struct GalleryView: View {
     
     var body: some View {
         GeometryReader { geometry in
+            let countdownTotal = 60.0
             let isLandscape = geometry.size.width > geometry.size.height
             let isPad = UIDevice.current.userInterfaceIdiom == .pad
             let columnCount = (isPad && isLandscape) ? 4 : isPad ? 3 : 2
@@ -44,10 +47,29 @@ struct GalleryView: View {
                     .font(.system(size: 16, weight: .bold))
                     .padding()
                     .overlay(
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(Color.gray, lineWidth: 1)
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.gray, lineWidth: 1)
+                            if countdown > 0 {
+                                Color.black.opacity(0.3)
+                                    .cornerRadius(8)
+                                HStack(spacing: 6) {
+                                    Image(systemName: "clock.fill")
+                                        .foregroundColor(.white)
+                                    Text("Wait for \(countdown)s before making another search.")
+                                        .foregroundColor(.white)
+                                        .font(.footnote.weight(.semibold))
+                                }
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 6)
+                                .background(Color.black.opacity(0.6))
+                                .clipShape(Capsule())
+                            }
+                        }
                     )
+                    .disabled(countdown > 0)
                     .onSubmit {
+                        deadline = Date.now.addingTimeInterval(countdownTotal)
                         keyword = inputText
                     }
                 
@@ -55,77 +77,86 @@ struct GalleryView: View {
                     .frame(width: isPad ? 800 : 320, height: isPad ? 60 : 50)
                     .padding(.bottom, adReady ? 15 : -50)
                 ScrollView {
-                    LazyVGrid(columns: columns) {
-                        ForEach(Array(viewModel.artpieceDTOList.enumerated()), id: \.1.objectID) { dtx, artpieceDTO in
-                            Group {
-                                if let url = URL(string: artpieceDTO.primaryImageSmall) {
-                                    ZStack(alignment: .topTrailing){
-                                        AsyncImage(url: url) { phase in
-                                            switch phase {
-                                            case .empty:
-                                                Color.gray.opacity(0.1)
-                                                    .aspectRatio(1, contentMode: .fit)
-                                            case .success(let image):
-                                                image
-                                                    .resizable()
-                                                    .scaledToFit()
-                                            case .failure:
-                                                Image(systemName: "photo")
-                                                    .resizable()
-                                                    .scaledToFit()
-                                                    .foregroundColor(.secondary)
-                                            @unknown default:
-                                                EmptyView()
+                    ZStack {
+                        LazyVGrid(columns: columns) {
+                            ForEach(Array(viewModel.artpieceDTOList.enumerated()), id: \.1.objectID) { dtx, artpieceDTO in
+                                Group {
+                                    if let url = URL(string: artpieceDTO.primaryImageSmall) {
+                                        ZStack(alignment: .topTrailing){
+                                            LowResImageView(
+                                                id: artpieceDTO.objectID,
+                                                urlStr: url.absoluteString,
+                                                service: ArtpieceService(context: context)
+                                            )
+                                            Image(systemName: artPieces.map {$0.id}.contains(artpieceDTO.objectID) ? "heart.fill" : "heart")
+                                                .resizable()
+                                                .scaledToFit()
+                                                .frame(width: 20, height: 20)
+                                                .padding()
+                                                .foregroundStyle(.red)
+                                        }
+                                        .overlay {
+                                            Rectangle()
+                                                .stroke(LinearGradient(colors:
+                                                                        [Color("FrameColor1"),
+                                                                         Color("FrameColor2"),
+                                                                         Color("FrameColor1"),
+                                                                         Color("FrameColor2")], startPoint: .topLeading, endPoint: .bottomTrailing), lineWidth: 5)
+                                                .shadow(radius: 5)
+                                        }
+                                        .padding(.vertical, isPad ? 10 : 5)
+                                        .onAppear {
+                                            if artpieceDTO.objectID == viewModel.artpieceDTOList.last?.objectID {
+                                                if countdown > 0 || viewModel.resultForThisKeywordComplete {
+                                                    return
+                                                }
+                                                deadline = Date.now.addingTimeInterval(countdownTotal)
+                                                Task {
+                                                    await viewModel.fetchNextBatch()
+                                                }
                                             }
                                         }
-                                        Image(systemName: artPieces.map {$0.id}.contains(artpieceDTO.objectID) ? "heart.fill" : "heart")
+                                        .onTapGesture {
+                                            selectedIndex = dtx
+                                        }
+                                    } else {
+                                        Image(systemName: "photo")
                                             .resizable()
                                             .scaledToFit()
-                                            .frame(width: 20, height: 20)
-                                            .padding()
-                                            .foregroundStyle(.red)
+                                            .foregroundColor(.secondary)
+                                            .aspectRatio(1, contentMode: .fit)
                                     }
-                                    .overlay {
-                                        Rectangle()
-                                            .stroke(LinearGradient(colors:
-                                                                    [Color("FrameColor1"),
-                                                                     Color("FrameColor2"),
-                                                                     Color("FrameColor1"),
-                                                                     Color("FrameColor2")], startPoint: .topLeading, endPoint: .bottomTrailing), lineWidth: 5)
-                                            .shadow(radius: 5)
+                                }
+                                .frame(width: geometry.size.width / CGFloat(columnCount + 1))
+                                .frame(maxHeight: 200)
+                            }
+                        }
+                        VStack {
+                            Spacer()
+                            Group {
+                                if !viewModel.resultForThisKeywordComplete {
+                                    if countdown > 0 {
+                                        Text("Swipe up for more results, available in \(countdown) seconds")
+                                    } else {
+                                        Text("Swipe up for more results")
                                     }
-                                    .padding(.vertical, isPad ? 10 : 5)
-                                    .onAppear {
-                                        if artpieceDTO.objectID == viewModel.artpieceDTOList.last?.objectID {
-                                            Task {
-                                                await viewModel.fetchNextBatch()
-                                            }
-                                        }
-                                    }
-                                    .onTapGesture {
-                                        selectedIndex = dtx
-                                    }
-                                } else {
-                                    Image(systemName: "photo")
-                                        .resizable()
-                                        .scaledToFit()
-                                        .foregroundColor(.secondary)
-                                        .aspectRatio(1, contentMode: .fit)
                                 }
                             }
-                            .frame(width: geometry.size.width / CGFloat(columnCount + 1))
-                            .frame(maxHeight: 200)
+                            .font(.footnote.weight(.semibold))
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 6)
+                            .background(Color.black.opacity(0.7))
+                            .clipShape(Capsule())
                         }
                     }
                 }
                 .overlay {
                     switch viewModel.searchStatus {
-                    case .searchNotStarted:
-                        Text("Waiting for search input")
+                    case .searchNotStarted, .searchFoundResult:
+                        EmptyView()
                     case .searching:
                         Text("Search in progress")
-                    case .searchFoundResult:
-                        EmptyView()
                     case .searchFoundNothing:
                         Text("Did not find anything")
                     }
@@ -135,9 +166,14 @@ struct GalleryView: View {
                         dismiss()
                     }
                 } message: {
-                    if let error = viewModel.error {
-                        Text("Error: \(error.localizedDescription)")
+                    if let error = viewModel.error as? ArtpieceService.ArtpieceServiceError {
+                        Text("Error: \(error.description)")
                             .foregroundStyle(.black)
+                    } else {
+                        if let error = viewModel.error {
+                            Text("Error: \(error.localizedDescription)")
+                                .foregroundStyle(.black)
+                        }
                     }
                 }
                 .onChange(of: keyword) {
@@ -155,6 +191,7 @@ struct GalleryView: View {
                     }
                 }
                 .onReceive(timer) { _ in
+                    countdown = max(0, Int(ceil(deadline.timeIntervalSinceNow)))
                     dotCount = (dotCount + 1) % 4
                 }
                 .fullScreenCover(isPresented: Binding(
@@ -181,3 +218,35 @@ struct GalleryView: View {
         }
     }
 }
+
+struct LowResImageView: View {
+    let id: Int
+    let urlStr: String
+    let service: ArtpieceService
+    
+    @State private var uiImage: UIImage?
+    
+    var body: some View {
+        Group {
+            if let img = uiImage {
+                Image(uiImage: img).resizable().scaledToFit()
+            } else {
+                Color.gray.opacity(0.1)
+                    .aspectRatio(1, contentMode: .fit)
+            }
+        }
+        .task(id: id) {
+            do {
+                if let data = try await service.fetchLowResImageData(
+                    for: id,
+                    urlStr: urlStr
+                ),
+                   let img = UIImage(data: data)
+                {
+                    uiImage = img
+                }
+            } catch {}
+        }
+    }
+}
+

@@ -14,6 +14,7 @@ class GalleryViewModel: ObservableObject {
     @Published var artpieceDTOList = [ArtpieceDTO]()
     @Published var error: Error?
     @Published var searchStatus: CurrentStatus = .searchNotStarted
+    @Published var resultForThisKeywordComplete = false
     enum CurrentStatus {
         case searchNotStarted
         case searching
@@ -30,6 +31,7 @@ class GalleryViewModel: ObservableObject {
         do {
             artpieceDTOList = try await apService.generateObjectIDListAndFetchFirstPage(with: keyword).filter {!$0.primaryImageSmall.isEmpty}
             searchStatus = artpieceDTOList.isEmpty ? .searchFoundNothing : .searchFoundResult
+            resultForThisKeywordComplete = artpieceDTOList.isEmpty
         } catch {
             print("error is \(error.localizedDescription)")
             searchStatus = .searchNotStarted
@@ -45,6 +47,7 @@ class GalleryViewModel: ObservableObject {
         searchStatus = .searching
         do {
             let newItems = try await apService.fetchArtpieceInTheNextBatch().filter {!$0.primaryImageSmall.isEmpty}
+            resultForThisKeywordComplete = newItems.isEmpty
             artpieceDTOList.append(contentsOf: newItems)
             searchStatus = artpieceDTOList.isEmpty ? .searchFoundNothing : .searchFoundResult
         } catch {
